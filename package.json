@@ -4,13 +4,14 @@
   "description": "Git Match for devs",
   "main": "index.js",
   "scripts": {
-    "dev"  : "nodemon src/app.js",
-    "start"  : "nodemon src/app.js",
+    "dev": "nodemon src/app.js",
+    "start": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ananya Miriyala",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mongoose": "^8.13.2"
   }
 }
