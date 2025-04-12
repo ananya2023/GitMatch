@@ -8,14 +8,15 @@ app.use(express.json())
 
 app.post("/signup" , async (req,res)=>{
     const userObj = req.body;
-    console.log(userObj)
+    console.log(userObj , "user obj")
     // Creating new instance of a User model
     const user = new User(userObj)
     try {
         await user.save()
         res.status(200).send("User Added Succesfully") 
     } catch (error) {
-        res.status(400).send("UseError in Adding user",error)
+        console.error("Error in Adding user", error)
+        res.status(400).send("Error in Adding user" + error)
     }
    
     
@@ -34,7 +35,7 @@ app.get("/email" , async (req,res)=>{
             res.status(200).send({msg : "User Fetched Succesfully" , data : data}) 
         }
     } catch (error) {
-        res.status(400).send("User not found",error)
+        res.status(400).send("User not found" + error)
     }
     
 });
@@ -47,7 +48,7 @@ app.delete("/user" , async (req,res)=>{
         const data = await User.findByIdAndDelete(userObj)
         res.status(200).send({msg : "User Deleted Succesfully"})
     } catch (error) {
-        res.status(400).send("User not found",error)
+        res.status(400).send("User not found" + error)
     }
     
 });
@@ -62,11 +63,11 @@ app.patch("/user" , async (req,res)=>{
     console.log(userId )
     console.log(data)
     try {
-        const result = await User.findByIdAndUpdate(userId , data) 
+        const result = await User.findByIdAndUpdate(userId , data , {runValidators  :true}) 
         res.status(200).send({msg : "User Updated Succesfully"})
     } catch (error) {
         console.log(error)
-        res.status(400).send("User not found",error)
+        res.status(400).json("Error"+ error.message)
     }
     
 });
