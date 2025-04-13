@@ -55,19 +55,36 @@ app.delete("/user" , async (req,res)=>{
 
 
 // update user
-app.patch("/user" , async (req,res)=>{
-    const userId = req.body.userId;
+app.patch("/user/:userId" , async (req,res)=>{
+
+    const userId = req.params?.userId;
+    console.log(userId , "user id")
     console.log(mongoose.Types.ObjectId.isValid(userId)) // should return true
 
     const data = req.body;
-    console.log(userId )
-    console.log(data)
+   
     try {
+        const ALLOWED_UPDATES = [
+            "photoUrl",
+            "bio",
+            "gender",
+            "skills"
+        ]
+        const isUpdateAllowed = Object.keys(data).every((k) => ALLOWED_UPDATES.includes(k))
+        if(!isUpdateAllowed){
+            throw new Error("Update not Allowed")
+            // return res.status(400).send("Update not Allowed")
+        }
+        console.log(isUpdateAllowed)
+        console.log(data)
+        if(data.skills.length > 0){
+            throw new Error("Skills can't be greated than 10")
+        }
         const result = await User.findByIdAndUpdate(userId , data , {runValidators  :true}) 
         res.status(200).send({msg : "User Updated Succesfully"})
     } catch (error) {
         console.log(error)
-        res.status(400).json("Error"+ error.message)
+        res.status(400).json("UPDATE Error"+ error.message)
     }
     
 });

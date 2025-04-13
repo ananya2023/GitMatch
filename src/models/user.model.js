@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
     },
     mobileNumber : {
         type : String 
-        // required : tru
     },
     age : {
         type : Number,
