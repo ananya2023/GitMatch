@@ -2,6 +2,7 @@ const express = require('express')
 const connectDb  = require('./config/database')
 const User = require('./models/user.model')
 const mongoose = require('mongoose')
+var validator = require('validator');
 
 const app = express()
 app.use(express.json())
@@ -10,6 +11,10 @@ app.post("/signup" , async (req,res)=>{
     const userObj = req.body;
     console.log(userObj , "user obj")
     // Creating new instance of a User model
+    const isValidEmail = validator.isEmail(req.body.emailId); //=> true
+    if(!isValidEmail){
+       res.status(400).send("Invalid Email")
+    }
     const user = new User(userObj)
     try {
         await user.save()

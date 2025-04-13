@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+var validator = require('validator');
  
 
 const userSchema = new mongoose.Schema({
@@ -21,7 +22,12 @@ const userSchema = new mongoose.Schema({
     },
     password : {
         type : String , 
-        required : true
+        required : true,
+        validate(value) {
+            if(!validator.isStrongPassword(value)) {
+                throw new Error("Password is not strong enough")
+            }
+        }
     },
     mobileNumber : {
         type : String 
@@ -41,6 +47,11 @@ const userSchema = new mongoose.Schema({
     },
     photoUrl : {
         type : String,
+        validate(value) {
+            if(!validator.isURL(value)) {
+                throw new Error("Photo Url should be Valid")
+            }
+        }
     },
     bio : {
         type : String,
