@@ -41,12 +41,13 @@ app.post("/login" , async (req, res)=>{
         if(!user){
             return res.status(400).send("Invalide Credentials")
         }
-        const isPasswordMatch = await bcrypt.compare(password, user.password)
+        const isPasswordMatch = await user.validatePassword(password)
+        console.log(isPasswordMatch , "is pw match")
         if(!isPasswordMatch){
             return res.status(400).send("Invalid Credentials")
         }
         // create JWT Token
-        const token = jwt.sign({userId : user._id}, "GitMatch@Ananya", {expiresIn : "1h"})
+        const token = await user.getJWT()
         // Add the token to the cookie and send response to the users
         res.cookie("token", token , {expires : new Date(Date.now() + 3600000), httpOnly : true  })
         res.status(200).send({msg : "User Logged In Succesfully"})
