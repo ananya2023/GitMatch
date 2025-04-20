@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt')
 const {validateSignUpData} = require('./utils/validation')
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
-
+const {authUser} = require('./middlewares/auth')
 
 const app = express()
 app.use(express.json())
@@ -46,9 +46,9 @@ app.post("/login" , async (req, res)=>{
             return res.status(400).send("Invalid Credentials")
         }
         // create JWT Token
-        const token = jwt.sign({userId : user._id}, "GitMatch@Ananya", {expiresIn : "1d"})
+        const token = jwt.sign({userId : user._id}, "GitMatch@Ananya", {expiresIn : "1h"})
         // Add the token to the cookie and send response to the users
-        res.cookie("token", token)
+        res.cookie("token", token , {expires : new Date(Date.now() + 3600000), httpOnly : true  })
         res.status(200).send({msg : "User Logged In Succesfully"})
     } catch (error) {
         res.status(400).send("User not found" + error)
@@ -56,28 +56,25 @@ app.post("/login" , async (req, res)=>{
 
 }); 
 
-app.get("/profile",async(req,res)=>{
+app.get("/profile", authUser , async(req,res)=>{
    try {
-
-    const cookie = req.cookies;
-    const {token} = cookie
-    // Validate my token
-    if(!token){
-        return res.status(400).send("Token not found")
-    }
-    const decodedToken = await jwt.verify(token, "GitMatch@Ananya")
-    const {userId} = decodedToken
-
-    const user = await User.findById(userId)
-    if(!user){
-        return res.status(400).send("User not found")
-    }   
-    res.status(200).json({"msg" : "User Profile Fetched Successfully user" , "data" : user})
+    const user = req.user
+    res.send(user)
    } catch (error) {
     res.send("Error in getting user" + error)
     
    }
 })
+
+app.post("/sendConnectionRequest", authUser , async(req,res)=>{
+    try {
+     const user = req.user
+     res.send(user.firstName +" is sending connection rqeuest")
+    } catch (error) {
+     res.send("Error in getting user" + error)
+     
+    }
+ })
    
 
 // Get all users by email
