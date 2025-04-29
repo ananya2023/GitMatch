@@ -12,8 +12,8 @@
 Status - ignored , intrested  ,accepted , Rejected
 <!-- User Profiles -->
 ## connectionRequestRouter
-- POST /request/send/intrested/:userId
-- POST /request/send/ignored/:userId
+- POST /request/send/:status/:userId  -- intrested or ignore 
+
 - POST /request/review/accepted/:userId
 - POST /request/review/rejected/:userId
 

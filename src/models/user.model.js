@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-var validator = require('validator');
+const validator = require('validator');
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
  
@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
         type : String ,
         required : true,
         minLength : 4,
-        maxLength : 30
+        maxLength : 30,
+        index : true
     },
     lastName : {
         type : String ,
@@ -32,7 +33,8 @@ const userSchema = new mongoose.Schema({
         }
     },
     mobileNumber : {
-        type : String 
+        type : String ,
+        unique : true
     },
     age : {
         type : Number,
