@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const connectionRequestSchema = new mongoose.Schema({
     fromUserId : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : "User",
+        ref : "User", // Reference to the user collection
         required : true
     },
     toUserId : {
@@ -34,7 +34,7 @@ connectionRequestSchema.pre("save", async function (next) {
     }
     next()
 })
-const ConnectionRequestModel = mongoose.model("ConnectionRequest" , connectionRequestSchema ) 
-module.exports = ConnectionRequestModel
+const ConnectionRequest = mongoose.model("ConnectionRequest" , connectionRequestSchema ) 
+module.exports = ConnectionRequest
 
 // ignored , intrested  ,accepted , Rejected

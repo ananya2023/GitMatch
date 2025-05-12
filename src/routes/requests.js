@@ -6,7 +6,7 @@ const User = require('../models/user.model')
 const ConnectionRequest = require('../models/connectionRequest.model')
 
 
-
+// Send Connection Request
 requestRouter.post("/request/send/:status/:toUserId", authUser , async(req,res)=>{
     try {
      const fromUserId = req.user._id;
@@ -44,16 +44,44 @@ requestRouter.post("/request/send/:status/:toUserId", authUser , async(req,res)=
      res.send("Error" + error)
      
     }
- })
+})
 
-// Get all users from database
-requestRouter.get("/feed" , async (req,res)=>{
+//  Reject or Accept Connection Request
+/* 
+  loggedInuser = touserId
+  status = intrested
+  requestIdValid
+*/
+
+requestRouter.post("/request/review/:status/:requestId", authUser , async(req,res)=>{
     try {
-        const data = await User.find({})
-        res.status(200).send({msg : "User Fetched Succesfully" , data : data}) 
+     const loggedInUser = req.user;
+     console.log(loggedInUser , "logged in usr ")
+      
+     const  {status,requestId} = req.params   
+    //  console.log(fromUserId, toUserId, status)
+
+     const allowedStatus = ["accepted" , "rejected"]
+     if(!allowedStatus.includes(status)){
+        return res.status(400).json({message : "Status is not allowed"})
+     }
+      
+     const connectionRequest = await ConnectionRequest.findOne({
+        _id : requestId,
+        toUserId : loggedInUser._id,
+        status : "interested"  
+     })
+     if(!connectionRequest){
+        return res.status(404).json({message : "Connection Request not found"})
+     }
+     connectionRequest.status = status
+     const data = await connectionRequest.save()
+     res.json({msg : "Coonection Request " + status ,data})
+  
     } catch (error) {
-        res.status(400).send("Error in fetching users",error)
+     res.send("Error" + error)
+     
     }
-});
-   
+ }) 
+
 module.exports = requestRouter

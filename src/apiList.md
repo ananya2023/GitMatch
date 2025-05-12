@@ -18,8 +18,8 @@ Status - ignored , intrested  ,accepted , Rejected
 - POST /request/review/rejected/:userId
 
 ## userRouter
-- GET /connections
-- GET /user/requests
+- GET /user/connections
+- GET /user/requests/recieved
 - GET /feed - fetches all profiles
 
 
