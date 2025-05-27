@@ -32,7 +32,7 @@ authRouter.post("/login" , async (req, res)=>{
     try {
         const user = await User.findOne({emailId})
         if(!user){
-            return res.status(400).send("Invalide Credentials")
+            return res.status(400).send("Invalid Credentials")
         }
         const isPasswordMatch = await user.validatePassword(password)
         if(!isPasswordMatch){
@@ -42,7 +42,7 @@ authRouter.post("/login" , async (req, res)=>{
         const token = await user.getJWT()
         // Add the token to the cookie and send response to the users
         res.cookie("token", token , {expires : new Date(Date.now() + 3600000), httpOnly : true  })
-        res.status(200).send({msg : "User Logged In Succesfully"})
+        res.status(200).send({msg : "User Logged In Successfully" , user})
     } catch (error) {
         res.status(400).send("User not found" + error)
     }
