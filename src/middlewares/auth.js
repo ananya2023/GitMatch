@@ -7,7 +7,7 @@ const authUser = async(req,res,next) => {
     // Read the token from request
     const {token} = req.cookies
     if(!token) {
-        throw new Error("Token is not Valid !!!!!")
+        return res.status(401).send("Please Login!") 
     }
     // validate the token
     const decodedToken =  await jwt.verify(token, "GitMatch@Ananya")
